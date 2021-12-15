@@ -24,24 +24,27 @@ const fetchInput = async (type, searchQuery) => {
 };
 
 function createCard(city) {
-  let dataContainer = document.createElement('div');
-  let address = document.createElement('h2');
-  address.innerText = city.location.name;
-  let tmp = document.createElement('h3');
-  tmp.innerText = city.current.temp_c + '°C';
-  let sky = document.createElement('h3');
-  sky.innerText = city.current.condition.text;
-  let icon = document.createElement('img');
-  icon.src = city.current.condition.icon;
-  let humidity = document.createElement('h3');
-  humidity.innerText = city.current.humidity + '%';
+    let dataContainer = document.createElement('div');
+    dataContainer.id = "data-container"
+    dataContainer.innerHTML = "";
+    let address = document.createElement('h2');
+    address.innerText = city.location.name;
+    let tmp = document.createElement('h3');
+    tmp.innerText = city.current.temp_c + '°C';
+    let sky = document.createElement('h3');
+    sky.innerText = city.current.condition.text;
+    let icon = document.createElement('img');
+    icon.src = city.current.condition.icon;
+    let humidity = document.createElement('h3');
+    humidity.innerText = city.current.humidity + '%';
   
-  dataContainer.append(address, tmp, sky, icon, humidity);
-  root.append(dataContainer);
-}
+    dataContainer.append(address, tmp, sky, icon, humidity);
+    document.getElementById('card-wrapper').append(dataContainer);
+  }
 
 const createArray = async (searchTerm) => {
-  const cities = await fetchInput("search", searchTerm);
+  if (!searchTerm) return;
+  const cities = await fetchInput('search', searchTerm);
   const listOfCities = [];
   for (let i = 0; i < cities.length; i++) {
     listOfCities.push(cities[i].name);
@@ -51,11 +54,11 @@ const createArray = async (searchTerm) => {
 
 function autocomplete(input) {
   let currentFocus;
-  
+
   input.addEventListener('input', async function (e) {
     const searchQuery = e.target.value;
     const listOfCities = await createArray(searchQuery);
-    console.log(listOfCities)
+    console.log(listOfCities);
     let container = this.value;
     let matchContainer = this.value;
     let value = this.value;
@@ -72,7 +75,8 @@ function autocomplete(input) {
     input.parentNode.append(container);
     for (let i = 0; i < listOfCities.length; i++) {
       if (
-        listOfCities[i].substr(0, value.length).toUpperCase() == value.toUpperCase()
+        listOfCities[i].substr(0, value.length).toUpperCase() ==
+        value.toUpperCase()
       ) {
         matchContainer = document.createElement('div');
         matchContainer.innerHTML =
@@ -81,10 +85,11 @@ function autocomplete(input) {
         matchContainer.innerHTML +=
           "<input type='hidden' value='" + listOfCities[i] + "'>";
         matchContainer.addEventListener('click', async function (event) {
-          input.value = this.getElementsByTagName('input')[0].value.split(",")[0];
+          input.value =
+            this.getElementsByTagName('input')[0].value.split(',')[0];
           const selected = input.value;
-          const weather = await fetchInput("current", selected);
-          createCard(weather);
+          const cityWeather = await fetchInput('current', selected);
+          createCard(cityWeather);
           closeAllLists();
         });
         container.appendChild(matchContainer);
@@ -102,17 +107,22 @@ function autocomplete(input) {
   }
 }
 
-
 function main() {
   let input = document.createElement('input');
   input.classList.add('input');
   input.id = 'myInput';
+
   let root = document.getElementById('root');
-  root.append(input);
-  autocomplete(input);
+
+  const wrapper = document.createElement("div");
+  wrapper.id = "card-wrapper";
+
+  const inputWrapper = document.createElement("div");
+  inputWrapper.id = "input-wrapper";
+  inputWrapper.append(input);
   
-  // input.addEventListener('input', (event) => {
-  // });
+  root.append(inputWrapper, wrapper,);
+  autocomplete(input);
 }
 
 window.addEventListener('load', main);
