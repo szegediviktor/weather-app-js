@@ -46,7 +46,44 @@ function fillCard(city) {
     tmp.innerText = city.current.temp_c + "°C";
     sky.innerText = city.current.condition.text;
     icon.src = city.current.condition.icon;
-    humidity.innerText = city.current.humidity + "%";
+    humidity.innerText = "Humidity: " + city.current.humidity + "%";
+
+    let k = sky.innerText.toLowerCase();
+    console.log(root.className);
+
+    if (k.includes("cloudy") || k.includes("overcast")) {
+        root.className = "";
+        root.classList.add("overcast");
+        console.log(root.className);
+    } else if (k.includes("rain")) {
+        root.className = "";
+        root.classList.add("rainy");
+        console.log(root.className);
+    } else if (k.includes("mist")) {
+        root.className = "";
+        root.classList.add("misty");
+        console.log(root.className);
+    } else if (k.includes("sun")) {
+        root.className = "";
+        root.classList.add("sunny");
+        console.log(root.className);
+    } else if (k.includes("overcast")) {
+        root.className = "";
+        root.classList.add("overcast");
+        console.log(root.className);
+    } else if (k.includes("wind")) {
+        root.className = "";
+        root.classList.add("windy");
+        console.log(root.className);
+    } else if (k.includes("snow")) {
+        root.className = "";
+        root.classList.add("snowy");
+        console.log(root.className);
+    } else {
+        root.className = "";
+        root.classList.add("root");
+        console.log(root.className);
+    }
 }
 
 const createArray = async (searchTerm) => {
@@ -142,6 +179,8 @@ let listOfFavourites = [];
 
 function saveToFavourites(value, array) {
     let favDiv = document.createElement("div");
+    root.append(favDiv);
+
     array.push(value);
     console.log(array);
     return array;
