@@ -28,20 +28,25 @@ function createCard(city) {
     document.getElementById("card-wrapper").append(dataContainer);
 }
 
-// const weatherObject = {
-//     cloudy: "/pics/overcast.gif",
-//     sunny: "/pics/sunny.gif",
-//     rainy: "/pics/rainy.gif",
-// };
+const weatherObject = {
+    "cloudy": "/pics/overcast.gif",
+    "sunny": "/pics/sunny.gif",
+    "rainy": "/pics/rain.gif",
+    "partly cloudy": "/pics/overcast.gif",
+    "overcast": "/pics/overcast.gif",
+    "rain": "/pics/rain.gif",
+    "partly sunny": "/pics/sunny.gif",
+    "mist": "/pics/mist.gif",
+    "windy": "pics/windy.gif",
+    "snow": "/pics/snow.gif",
+    "Light rain shower": "/pics/rain.gif",
+    "fog": "/pics/mist.gif"
+};
 
-// function checkWeatherCondition(city) {
-//     const img = document.createElement("img");
-//     img.id = "background-img";
-//     for (const condition of weatherObject) {
-//         if (condition === city.sky.innerText.toLowerCase()) img.src = condition;
-//         document.getElementById("root").append(img);
-//     }
-// }
+function checkWeatherCondition(city) {
+    document.getElementById("background-img").src = weatherObject[city.current.condition.text.toLowerCase()] ?? "/pics/default.png";
+}
+
 
 function fillCard(city) {
     address.innerText = city.location.name;
@@ -49,36 +54,6 @@ function fillCard(city) {
     sky.innerText = city.current.condition.text;
     icon.src = city.current.condition.icon;
     humidity.innerText = "Humidity: " + city.current.humidity + "%";
-
-    let skyCondition = sky.innerText.toLowerCase();
-
-    // checkWeatherCondition(city);
-
-    if (skyCondition.includes("cloudy") || skyCondition.includes("overcast")) {
-        root.className = "";
-        root.classList.add("overcast");
-    } else if (skyCondition.includes("rain")) {
-        root.className = "";
-        root.classList.add("rainy");
-    } else if (skyCondition.includes("mist")) {
-        root.className = "";
-        root.classList.add("misty");
-    } else if (skyCondition.includes("sun")) {
-        root.className = "";
-        root.classList.add("sunny");
-    } else if (skyCondition.includes("overcast")) {
-        root.className = "";
-        root.classList.add("overcast");
-    } else if (skyCondition.includes("wind")) {
-        root.className = "";
-        root.classList.add("windy");
-    } else if (skyCondition.includes("snow")) {
-        root.className = "";
-        root.classList.add("snowy");
-    } else {
-        root.className = "";
-        root.classList.add("root");
-    }
 }
 
 const createArray = async (searchTerm) => {
@@ -95,7 +70,8 @@ function autocomplete(input) {
     let currentFocus;
 
     input.addEventListener("focus", function () {
-        displayFavorites(input, listOfFavourites);
+        
+            displayFavorites(input, listOfFavourites);
     });
 
     input.addEventListener("input", async function (e) {
@@ -105,11 +81,11 @@ function autocomplete(input) {
         let matchContainer = this.value;
         let value = this.value;
         closeAllLists();
-
+        
         if (!value) {
             return false;
         }
-
+        
         currentFocus = -1;
         container = document.createElement("div");
         container.setAttribute("id", this.id + " autocomplete-list");
@@ -119,19 +95,19 @@ function autocomplete(input) {
             if (
                 listOfCities[i].substr(0, value.length).toUpperCase() ==
                 value.toUpperCase()
-            ) {
-                matchContainer = document.createElement("div");
+                ) {
+                    matchContainer = document.createElement("div");
                 matchContainer.innerHTML =
                     "<strong>" +
                     listOfCities[i].substr(0, value.length) +
                     "</strong>";
-                matchContainer.innerHTML += listOfCities[i].substr(
+                    matchContainer.innerHTML += listOfCities[i].substr(
                     value.length
                 );
                 matchContainer.innerHTML +=
                     "<input type='hidden' value='" + listOfCities[i] + "'>";
-                matchContainer.addEventListener(
-                    "click",
+                    matchContainer.addEventListener(
+                        "click",
                     async function (event) {
                         input.value =
                             this.getElementsByTagName("input")[0].value.split(
@@ -146,7 +122,7 @@ function autocomplete(input) {
                             createCard(cityWeather);
                         }
                         fillCard(cityWeather);
-                        // input.value = "";
+                        checkWeatherCondition(cityWeather);
 
                         closeAllLists();
                     }
@@ -170,9 +146,6 @@ function autocomplete(input) {
 let listOfFavourites = [];
 
 function saveToFavourites(value, array) {
-    let favDiv = document.createElement("div");
-    root.append(favDiv);
-
     array.push(value);
     console.log(array);
     return array;
@@ -180,42 +153,57 @@ function saveToFavourites(value, array) {
 
 function displayFavorites(input, favorites) {
     console.log(input.value === "");
-    if (input.value) {
+    if(!document.getElementById("favoriteDiv")) {
         let favoritedDiv = document.createElement("div");
-        favoritedDiv.innerHTML = "";
-        for (let i = 0; i < favorites.length; i++) {
-            console.log(favorites[i]);
-            let p = document.createElement("p");
-            p.innerText += favorites[i];
-            favoritedDiv.append(p);
-        }
+        favoritedDiv.id = "favoriteDiv";
         input.parentNode.append(favoritedDiv);
+
     }
-}
+    if (document.getElementById("favoriteDiv")) {
+        const favoritedDiv = document.getElementById("favoriteDiv");
+        console.log("van div")
+        const p = document.createElement("p");
+        p.innerHTML = "";
+        for(let i = 0; i < favorites.length;i++){
+            p.innerText = favorites[i];
+            if(document.getElementById("favoriteDiv").childElementCount < listOfFavourites.length) {
+                favoritedDiv.append(p);
+            }
+        }
+    }
+        input.parentNode.append(document.getElementById("favoriteDiv"));
+    }
 
 function main() {
     let input = document.createElement("input");
     input.classList.add("input");
     input.id = "myInput";
-
+    
     let root = document.getElementById("root");
-
-    // const wrapper = document.createElement("div");
-    // wrapper.id = "card-wrapper";
-
+    
     const inputWrapper = document.createElement("div");
     inputWrapper.id = "input-wrapper";
-
+    
     const btn = document.createElement("button");
     btn.innerText = "Save to favourites";
     btn.id = "btn";
     btn.addEventListener("click", () => {
         saveToFavourites(input.value, listOfFavourites);
+        
     });
+    
+    const imgWrapper = document.createElement("div");
+    imgWrapper.id = "imgWrapper";
+    
+    const img = document.createElement("img");
+    img.id = "background-img";
+    imgWrapper.append(img);
 
     inputWrapper.append(input, btn);
-    root.append(inputWrapper);
+    root.append(imgWrapper, inputWrapper);
+    
     autocomplete(input);
+    console.log(input.value);
 }
 
 window.addEventListener("load", main);

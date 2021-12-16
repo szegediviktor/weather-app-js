@@ -23,7 +23,16 @@
     background-size: cover;
 }
 
-.sunny {
+img {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    
+}
+
+/* .sunny {
     background: url(/pics/sunny.gif);
     background-repeat: no-repeat;
     background-size: cover;
@@ -58,7 +67,7 @@
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
-}
+} */
 .input {
     color: black;
 }
@@ -137,7 +146,3 @@
     transform: translateX(-41%);
 }
 
-#background-img {
-    width: 300px;
-    height: 500px;
-}
