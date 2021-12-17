@@ -40,8 +40,8 @@ const weatherObject = {
     "windy": "pics/windy.gif",
     "snow": "/pics/snow.gif",
     "Light rain shower": "/pics/rain.gif",
-    "fog": "/pics/mist.gif"
-};
+    "fog": "/pics/mist.gif",
+    };
 
 function checkWeatherCondition(city) {
     document.getElementById("background-img").src = weatherObject[city.current.condition.text.toLowerCase()] ?? "/pics/default.png";
@@ -70,8 +70,16 @@ function autocomplete(input) {
     let currentFocus;
 
     input.addEventListener("focus", function () {
-        
-            displayFavorites(input, listOfFavourites);
+        displayFavorites(input, listOfFavourites);
+        input.value = "";
+        input.addEventListener("input", () =>{
+            if(input.value !== "") {
+                document.getElementById("favoriteDiv").setAttribute("class", "hidden");
+            }
+        })
+        if (input.value === "") {
+            document.getElementById("favoriteDiv").removeAttribute("class", "hidden");
+        }
     });
 
     input.addEventListener("input", async function (e) {
@@ -156,6 +164,7 @@ function displayFavorites(input, favorites) {
     if(!document.getElementById("favoriteDiv")) {
         let favoritedDiv = document.createElement("div");
         favoritedDiv.id = "favoriteDiv";
+        favoritedDiv.class = "visible";
         input.parentNode.append(favoritedDiv);
 
     }

@@ -68,6 +68,10 @@ img {
     background-size: cover;
     height: 100vh;
 } */
+
+.hidden {
+    display: none;
+}
 .input {
     color: black;
 }
